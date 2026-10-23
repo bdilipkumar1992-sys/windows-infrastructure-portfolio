@@ -122,3 +122,49 @@ Network addresses and internal infrastructure identifiers should be sanitized be
 - Test domain client membership and authentication.
 - Add a PowerShell domain health-check report.
 - Revisit replication diagnostics in a separate troubleshooting exercise.
+
+## 10. Organizational Unit and Security Group Management
+
+### Objective
+Create a dedicated Organizational Unit and a global security
+group for portfolio lab exercises using PowerShell.
+
+### Organizational Unit
+
+```powershell
+New-ADOrganizationalUnit `
+    -Name "Portfolio-Lab" `
+    -Path "DC=cloud,DC=com" `
+    -Description "OU for infrastructure portfolio lab exercises"
+
+Get-ADOrganizationalUnit `
+    -Identity "OU=Portfolio-Lab,DC=cloud,DC=com"
+
+New-ADGroup `
+    -Name "Portfolio-Lab-Admins" `
+    -SamAccountName "Portfolio-Lab-Admins" `
+    -GroupCategory Security `
+    -GroupScope Global `
+    -Path "OU=Portfolio-Lab,DC=cloud,DC=com" `
+    -Description "Test security group for portfolio lab"
+
+
+Commit with the message `Document AD OU and security group management`.
+
+## 3. Next milestone: Create a test user
+
+After updating GitHub, we'll create a dedicated test user inside `Portfolio-Lab`, add that user to `Portfolio-Lab-Admins`, and verify group membership. Then we'll configure a test Group Policy Object (GPO).
+
+Our AD lab checklist is progressing:
+
+<box border radius="lg" padding={3} gap={2}>
+  {@body const tasks = [{label:"Verify Windows Server and AD DS roles",done:true},{label:"Verify domain and DNS configuration",done:true},{label:"Create and verify Portfolio-Lab OU",done:true},{label:"Create and verify security group",done:true},{label:"Document OU and group in GitHub",done:false},{label:"Create test user and verify membership",done:false},{label:"Create and test a GPO",done:false}]}
+  {@body const [completed,setCompleted] = DIL.useState(tasks.map(t=>t.done))}
+  {#each tasks as task,i}
+    <checkbox key={task.label} checked={completed[i]} onChange={v=>setCompleted(old=>old.map((x,j)=>i===j?v:x))} lineThrough={false}>{task.label}</checkbox>
+  {/each}
+  <text color="secondary" size="xs">Your working checklist. The initial verification items are marked complete based on the results shared so far.</text>
+</box>
+
+Once you've committed the documentation, tell me **"README updated"** and we'll continue with the test user.
+  
